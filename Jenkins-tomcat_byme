@@ -1,0 +1,28 @@
+pipeline {
+   agent any
+   stages {
+     stage ('git_clone') {
+       steps {
+          git 'https://github.com/lakshmiprasad2019/myweb.git'
+       }
+     }
+     
+     stage (mvn_build) {
+         steps {
+            sh "mvn clean sonar:sonar package"
+         }
+     }
+      stage("deploy-devenv"){
+            steps{
+                sh """
+                    scp -o StrictHostKeyChecking=no target/myweb-8.2.5.war  jenkins@172.31.10.183:/opt/apache-tomcat-8.5.82/webapps
+                    
+                    ssh jenkins@172.31.10.183 sudo /usr/local/bin/tomcatdown
+                    
+                    ssh jenkins@172.31.10.183 sudo /usr/local/bin/tomcatup
+                """
+            }
+      }
+   
+   }
+}
