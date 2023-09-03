@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Download terraform code from Gihub') { 
             steps {
-                url: 'https://github.com/Kaushal-Linux/Pipeline.git'
+                git credentialsId: 'javahome2', url: 'https://github.com/Kaushal-Linux/Pipeline.git'
             }    
         }
         stage('DummyStage') { 
